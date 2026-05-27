@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vibii — The Volunteer Hive · Athens</title>
+  <meta name="description"
+    content="Vibii connects you to real volunteer missions in Athens. Earn Buzz Points, join verified causes, and build your social impact profile.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --amber: #F5A623;
+      --amber-d: #C47D0E;
+      --amber-xl: #FEF3DC;
+      --dark: #1A1208;
+      --dark2: #100C04;
+      --teal: #1A9E84;
+      --teal2: #2DBFA0;
+      --white: #FFFFFF;
+      --off: #FAF7F0;
+      --muted: rgba(255, 255, 255, 0.38);
+      --muted2: rgba(255, 255, 255, 0.18);
+      --border: rgba(255, 255, 255, 0.07);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark2);
+      color: var(--white);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── CURSOR ── */
+    .cur {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      width: 14px;
+      height: 14px;
+      background: var(--amber);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width .18s, height .18s, opacity .18s;
+      opacity: 0;
+      display: none;
+    }
+
+    .cur.big {
+      width: 44px;
+      height: 44px;
+      opacity: .55;
+    }
+
+    @media (pointer: fine) {
+      body {
+        cursor: none;
+      }
+
+      .cur {
+        display: block;
+      }
+    }
+
+    @media (pointer: coarse) {
+      body {
+        cursor: auto;
+      }
+
+      .cur {
+        display: none;
+      }
+    }
+
+    /* ── NOISE ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      padding: 0 48px;
+      height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(250, 247, 240, 0.85);
+      backdrop-filter: blur(24px) saturate(1.4);
+      border-bottom: 1px solid rgba(245, 166, 35, 0.12);
+    }
+
+    .nl {
+      text-decoration: none;
+      display: block;
+    }
+
+    .nav-logo {
+      height: 32px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .nr {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nr-date {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(26, 18, 8, 0.55);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nr-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal2);
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: .3;
+      }
+    }
+
+    .nr-btn {
+      background: var(--amber);
+      color: var(--dark);
+      border: none;
+      border-radius: 50px;
+      padding: 9px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .nr-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(245, 166, 35, .38);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 100px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Radial glow */
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 900px;
+      height: 900px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 166, 35, .07) 0%, transparent 68%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    /* Ghost word */
+    .hero-ghost {
+      position: absolute;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(180px, 28vw, 400px);
+      color: rgba(245, 166, 35, .03);
+      line-height: 1;
+      right: -60px;
+      top: 50%;
+      transform: translateY(-50%);
+      letter-spacing: -8px;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 1100px;
+    }
+
+    /* Eyebrow */
+    .hero-eye {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(245, 166, 35, .22);
+      border-radius: 50px;
+      padding: 7px 18px;
+      margin-bottom: 28px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .42);
+      opacity: 0;
+      animation: up .7s ease .05s forwards;
+    }
+
+    /* Problem statement — Instrument Serif italic for emotional pull */
+    .hero-problem {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-size: clamp(28px, 3.6vw, 52px);
+      color: rgba(255, 255, 255, .32);
+      line-height: 1.35;
+      margin-bottom: 24px;
+      max-width: 720px;
+      opacity: 0;
+      animation: up .7s ease .15s forwards;
+    }
+
+    /* Main headline */
+    .hero-h {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(48px, 12vw, 172px);
+      line-height: .86;
+      letter-spacing: .5px;
+      margin-bottom: 36px;
+      opacity: 0;
+      animation: up .8s ease .28s forwards;
+    }
+
+    .hero-h .a {
+      color: var(--amber);
+    }
+
+    .hero-h .o {
+      -webkit-text-stroke: 2px rgba(255, 255, 255, .15);
+      color: transparent;
+    }
+
+    /* Sub */
+    .hero-sub {
+      font-size: clamp(16px, 1.8vw, 20px);
+      font-weight: 400;
+      color: rgba(255, 255, 255, .46);
+      line-height: 1.7;
+      max-width: 520px;
+      margin-bottom: 48px;
+      opacity: 0;
+      animation: up .7s ease .42s forwards;
+    }
+
+    .hero-sub b {
+      color: rgba(255, 255, 255, .82);
+      font-weight: 500;
+    }
+
+    /* ── FORM BLOCK ── */
+    .form-wrap {
+      opacity: 0;
+      animation: up .7s ease .56s forwards;
+    }
+
+    .email-row {
+      display: flex;
+      gap: 10px;
+      max-width: 520px;
+      margin-bottom: 14px;
+    }
+
+    .e-inp {
+      flex: 1;
+      background: rgba(255, 255, 255, .06);
+      border: 1.5px solid rgba(245, 166, 35, .18);
+      border-radius: 50px;
+      padding: 15px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      color: var(--white);
+      outline: none;
+      transition: border-color .2s, background .2s;
+    }
+
+    .e-inp::placeholder {
+      color: rgba(255, 255, 255, .27);
+    }
+
+    .e-inp:focus {
+      border-color: var(--amber);
+      background: rgba(245, 166, 35, .05);
+    }
+
+    .e-btn {
+      background: var(--amber);
+      color: var(--dark);
+      border: none;
+      border-radius: 50px;
+      padding: 15px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      white-space: nowrap;
+      cursor: none;
+      flex-shrink: 0;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .e-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 36px rgba(245, 166, 35, .4);
+    }
+
+    .e-btn:active {
+      transform: scale(.98);
+    }
+
+    /* Social proof row */
+    .proof-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      opacity: 0;
+      animation: up .6s ease .7s forwards;
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .av {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid var(--dark2);
+      margin-left: -8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .av:first-child {
+      margin-left: 0;
+    }
+
+    .av1 {
+      background: #4E9AF5;
+      color: #fff;
+    }
+
+    .av2 {
+      background: #E24B4A;
+      color: #fff;
+    }
+
+    .av3 {
+      background: #1A9E84;
+      color: #fff;
+    }
+
+    .av4 {
+      background: #9B59B6;
+      color: #fff;
+    }
+
+    .av5 {
+      background: #F39C12;
+      color: #fff;
+    }
+
+    .proof-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .38);
+    }
+
+    .proof-text b {
+      color: rgba(255, 255, 255, .72);
+      font-weight: 600;
+    }
+
+    /* Success */
+    .success {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 15px 24px;
+      background: rgba(26, 158, 132, .1);
+      border: 1.5px solid rgba(26, 158, 132, .28);
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--teal2);
+      max-width: 520px;
+    }
+
+    .success.on {
+      display: flex;
+    }
+
+    /* Countdown */
+    .countdown-wrap {
+      margin-top: 64px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      opacity: 0;
+      animation: up .7s ease .85s forwards;
+    }
+
+    .cdown-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .cdown-nums {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .cd-block {
+      text-align: center;
+    }
+
+    .cd-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--amber);
+      line-height: 1;
+      letter-spacing: -1px;
+      display: block;
+    }
+
+    .cd-unit {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: block;
+    }
+
+    .cd-sep {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 36px;
+      color: rgba(245, 166, 35, .25);
+      padding: 0 2px;
+      margin-bottom: 10px;
+    }
+
+    .launch-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(245, 166, 35, .07);
+      border: 1px solid rgba(245, 166, 35, .15);
+      border-radius: 10px;
+      padding: 10px 16px;
+    }
+
+    .lt-text {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .45);
+      line-height: 1.4;
+    }
+
+    .lt-text b {
+      color: rgba(255, 255, 255, .8);
+      font-weight: 600;
+      display: block;
+    }
+
+    /* ── SOCIAL PROOF STRIP ── */
+    .strip {
+      background: rgba(245, 166, 35, .04);
+      border-top: 1px solid rgba(245, 166, 35, .07);
+      border-bottom: 1px solid rgba(245, 166, 35, .07);
+      padding: 28px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .strip-stat {
+      text-align: center;
+    }
+
+    .ss-n {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 44px;
+      color: var(--amber);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+
+    .ss-l {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .strip-div {
+      width: 1px;
+      height: 44px;
+      background: rgba(255, 255, 255, .06);
+    }
+
+    /* ── PROBLEM / SOLUTION ── */
+    .ps-section {
+      padding: 120px 48px;
+    }
+
+    .ps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      margin-top: 60px;
+    }
+
+    .ps-col {
+      padding: 52px 44px;
+    }
+
+    .ps-before {
+      background: rgba(255, 255, 255, .02);
+      border: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    .ps-after {
+      background: rgba(245, 166, 35, .04);
+      border: 1px solid rgba(245, 166, 35, .1);
+    }
+
+    .ps-tag {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .t-before {
+      background: rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .35);
+    }
+
+    .t-after {
+      background: rgba(245, 166, 35, .12);
+      color: var(--amber);
+    }
+
+    .ps-items {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .ps-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .ps-item.muted {
+      color: rgba(255, 255, 255, .38);
+    }
+
+    .ps-item.bright {
+      color: rgba(255, 255, 255, .82);
+    }
+
+    .ps-ic {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── APP PREVIEW ── */
+    .preview-section {
+      padding: 120px 48px;
+      position: relative;
+      overflow: hidden;
+      background: var(--off);
+      color: var(--dark);
+    }
+
+    .preview-section .ey {
+      color: var(--amber-d);
+    }
+
+    .preview-section .sec-title {
+      color: var(--dark);
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 64px;
+      align-items: center;
+      margin-top: 56px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .preview-text h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--dark);
+      letter-spacing: .5px;
+      line-height: .9;
+      margin-bottom: 20px;
+    }
+
+    .preview-text p {
+      font-size: 17px;
+      color: rgba(26, 18, 8, .55);
+      line-height: 1.7;
+      margin-bottom: 28px;
+    }
+
+    .check-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .ck {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: rgba(26, 18, 8, .65);
+    }
+
+    .ck::before {
+      content: '✓';
+      color: var(--teal);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Phone mockup */
+    .phone-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .phone-frame {
+      width: 290px;
+      background: #0d0d0d;
+      border-radius: 40px;
+      padding: 6px;
+      border: 1.5px solid rgba(26, 18, 8, 0.12);
+      box-shadow: 0 40px 90px rgba(26, 18, 8, 0.22);
+      overflow: hidden;
+    }
+
+    .phone-screen {
+      width: 100%;
+      aspect-ratio: 9 / 19.5;
+      border-radius: 34px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .phone-screen img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ── FOUNDER ── */
+    .founder-section {
+      padding: 120px 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+    }
+
+    .founder-left {}
+
+    .founder-q {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-size: clamp(28px, 4vw, 52px);
+      color: rgba(255, 255, 255, .9);
+      line-height: 1.3;
+      letter-spacing: -.5px;
+      margin-bottom: 36px;
+    }
+
+    .founder-q .amber {
+      color: var(--amber);
+    }
+
+    .founder-body {
+      font-size: 17px;
+      color: rgba(255, 255, 255, .45);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .founder-body b {
+      color: rgba(255, 255, 255, .75);
+      font-weight: 500;
+    }
+
+    .founder-sig {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, .07);
+    }
+
+    .sig-av {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--amber);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .sig-name {
+      font-weight: 600;
+      font-size: 16px;
+      color: var(--white);
+    }
+
+    .sig-role {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .founder-right {}
+
+    .perks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .perk {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 22px 24px;
+      border: 1px solid rgba(255, 255, 255, .05);
+      border-top: none;
+      transition: background .2s, border-color .2s;
+    }
+
+    .perk:first-child {
+      border-radius: 16px 16px 0 0;
+      border-top: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    .perk:last-child {
+      border-radius: 0 0 16px 16px;
+    }
+
+    .perk:hover {
+      background: rgba(245, 166, 35, .04);
+      border-color: rgba(245, 166, 35, .12);
+    }
+
+    .perk-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .perk-title {
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+
+    .perk-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    /* ── BOTTOM CTA ── */
+    .bottom {
+      text-align: center;
+      padding: 160px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bottom::before {
+      content: '';
+      position: absolute;
+      width: 1000px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(245, 166, 35, .09) 0%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .bottom-h {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(42px, 12vw, 160px);
+      line-height: .88;
+      letter-spacing: .5px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bottom-h .a {
+      color: var(--amber);
+    }
+
+    .bottom-h .o {
+      -webkit-text-stroke: 2px rgba(255, 255, 255, .12);
+      color: transparent;
+    }
+
+    .bottom-sub {
+      font-size: 18px;
+      color: rgba(255, 255, 255, .38);
+      max-width: 440px;
+      margin: 0 auto 48px;
+      line-height: 1.65;
+      position: relative;
+      z-index: 1;
+    }
+
+    .bottom-form {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--off);
+      border-top: 1px solid rgba(26, 18, 8, 0.08);
+      padding: 36px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .fl {
+      display: block;
+    }
+
+    .footer-logo {
+      height: 28px;
+      display: block;
+      object-fit: contain;
+    }
+
+    .fc {
+      font-size: 12px;
+      color: rgba(26, 18, 8, 0.45);
+    }
+
+    .fi {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(26, 18, 8, 0.6);
+      text-decoration: none;
+      transition: color .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fi:hover {
+      color: var(--amber-d);
+    }
+
+    /* ── SECTION COMMON ── */
+    .ey {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 12px;
+    }
+
+    .sec-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 7vw, 96px);
+      line-height: .88;
+      letter-spacing: .5px;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes up {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .rv {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+
+    .rv.on {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .rv.d1 {
+      transition-delay: .08s;
+    }
+
+    .rv.d2 {
+      transition-delay: .16s;
+    }
+
+    .rv.d3 {
+      transition-delay: .24s;
+    }
+
+    .rv.d4 {
+      transition-delay: .32s;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:960px) {
+      nav {
+        padding: 0 24px;
+      }
+
+      .hero {
+        padding: 88px 24px 60px;
+      }
+
+      .ps-grid,
+      .preview-grid,
+      .founder-section {
+        grid-template-columns: 1fr;
+      }
+
+      .preview-grid {
+        gap: 40px;
+      }
+
+      .strip {
+        flex-wrap: wrap;
+        gap: 24px;
+        padding: 24px;
+      }
+
+      .strip-div {
+        display: none;
+      }
+
+      .ps-section,
+      .preview-section,
+      .bottom,
+      .founder-section {
+        padding: 80px 24px;
+      }
+
+      .email-row,
+      .bottom-form {
+        flex-direction: column;
+      }
+
+      .countdown-wrap {
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      footer {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="cur" id="cur"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#" class="nl"><img src="vibii_logo.png" alt="Vibii Logo" class="nav-logo"></a>
+    <div class="nr">
+      <span class="nr-date"><span class="nr-dot"></span>Launching 30 June 2026</span>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-ghost" aria-hidden="true">HIVE</div>
+      <div class="hero-inner">
+
+        <div class="hero-eye">
+          <span style="width:6px;height:6px;border-radius:50%;background:var(--teal2);flex-shrink:0;"></span>
+          Pre-launch · Athens, Greece · iOS & Android
+        </div>
+
+        <p class="hero-problem">
+          "I want to volunteer. I just never know where to start."
+        </p>
+
+        <h1 class="hero-h">
+          <span class="a">Now</span><br>
+          <span>you do.</span>
+        </h1>
+
+        <p class="hero-sub">
+          Vibii connects you to <b>real missions near you</b> — plant trees, feed families, donate blood, rescue
+          animals. Join, show up, earn <b>Buzz Points</b>.
+        </p>
+
+        <div class="form-wrap">
+          <div id="fw-hero">
+            <div class="email-row">
+              <input class="e-inp hov" type="email" id="em-h" placeholder="your@email.com" autocomplete="email"
+                required>
+              <button class="e-btn hov" onclick="sub('h')">Be a Founding Bee 🍯</button>
+            </div>
+          </div>
+          <div class="success" id="ok-h">
+            <span>🐝</span> You're in! We'll notify you the moment we launch.
+          </div>
+
+          <div class="proof-row" id="pr-h">
+            <div class="avatars">
+              <div class="av av1">A</div>
+              <div class="av av2">M</div>
+              <div class="av av3">K</div>
+              <div class="av av4">S</div>
+              <div class="av av5">D</div>
+            </div>
+            <span class="proof-text"><b id="counter">247</b> people already waiting · Be next</span>
+          </div>
+        </div>
+
+        <div class="countdown-wrap">
+          <div>
+            <div class="cdown-label">Launch countdown</div>
+            <div class="cdown-nums">
+              <div class="cd-block"><span class="cd-num" id="cd-d">--</span><span class="cd-unit">days</span></div>
+              <span class="cd-sep">:</span>
+              <div class="cd-block"><span class="cd-num" id="cd-h">--</span><span class="cd-unit">hrs</span></div>
+              <span class="cd-sep">:</span>
+              <div class="cd-block"><span class="cd-num" id="cd-m">--</span><span class="cd-unit">min</span></div>
+              <span class="cd-sep">:</span>
+              <div class="cd-block"><span class="cd-num" id="cd-s">--</span><span class="cd-unit">sec</span></div>
+            </div>
+          </div>
+          <div class="launch-tag">
+            <span style="font-size:20px;">🇬🇷</span>
+            <div class="lt-text">
+              <b>Athens · 30 June 2026</b>
+              Starting local. Growing everywhere.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STRIP -->
+    <div class="strip rv">
+      <div class="strip-stat">
+        <div class="ss-n">92%</div>
+        <div class="ss-l">Mission completion in beta</div>
+      </div>
+      <div class="strip-div"></div>
+      <div class="strip-stat">
+        <div class="ss-n">4.8★</div>
+        <div class="ss-l">Average satisfaction score</div>
+      </div>
+      <div class="strip-div"></div>
+      <div class="strip-stat">
+        <div class="ss-n">8,000+</div>
+        <div class="ss-l">NGOs in Greece to connect</div>
+      </div>
+      <div class="strip-div"></div>
+      <div class="strip-stat">
+        <div class="ss-n">0</div>
+        <div class="ss-l">Other apps doing this in Greece</div>
+      </div>
+    </div>
+
+    <!-- PROBLEM / SOLUTION -->
+    <section class="ps-section">
+      <div class="ey rv">🔍 The problem</div>
+      <h2 class="sec-title rv">Why good intentions<br>die every Sunday.</h2>
+
+      <div class="ps-grid">
+        <div class="ps-col ps-before rv">
+          <span class="ps-tag t-before">Without Vibii</span>
+          <div class="ps-items">
+            <div class="ps-item muted"><span class="ps-ic">😩</span> You want to volunteer. You open Google. 45 minutes
+              later you've found nothing useful and given up.</div>
+            <div class="ps-item muted"><span class="ps-ic">👻</span> You sign up on an NGO website. Nobody ever contacts
+              you back.</div>
+            <div class="ps-item muted"><span class="ps-ic">📋</span> NGOs manage everything in WhatsApp groups and
+              spreadsheets — chaotic and manual.</div>
+            <div class="ps-item muted"><span class="ps-ic">🌀</span> Your impact goes unrecognised. No record, no
+              reward, no next step.</div>
+          </div>
+        </div>
+        <div class="ps-col ps-after rv d1">
+          <span class="ps-tag t-after">With Vibii</span>
+          <div class="ps-items">
+            <div class="ps-item bright"><span class="ps-ic">🔍</span> Open Vibii. See verified missions near you in 10
+              seconds. Filter by cause, date or city.</div>
+            <div class="ps-item bright"><span class="ps-ic">✅</span> Tap join. Get a reminder. The NGO has everything
+              ready. Show up.</div>
+            <div class="ps-item bright"><span class="ps-ic">📊</span> NGOs manage participants in real-time. Zero
+              spreadsheets. Automatic impact reports.</div>
+            <div class="ps-item bright"><span class="ps-ic">🍯</span> Earn Buzz Points. Build your impact profile. Rise
+              from Seedling to Queen Bee.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APP PREVIEW -->
+    <section class="preview-section">
+      <div class="ey rv">📲 The app</div>
+      <h2 class="sec-title rv" style="color:var(--dark);">This is what it<br>looks like.</h2>
+
+      <div class="preview-grid">
+        <div class="preview-text rv">
+          <h3>Find your<br>mission in<br>seconds.</h3>
+          <p>Browse real missions posted by verified NGOs and municipalities. Every listing shows you the cause, the
+            date, available spots, and how many Buzz Points you'll earn — before you commit.</p>
+          <div class="check-list">
+            <div class="ck">Filter by cause, city & date</div>
+            <div class="ck">Verified NGO profiles & ratings</div>
+            <div class="ck">Real-time spots availability</div>
+            <div class="ck">Buzz Points shown upfront</div>
+            <div class="ck">One-tap join with auto-reminder</div>
+          </div>
+        </div>
+
+        <div class="phone-wrap rv d2">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <img src="vibii_app_screenshot.png" alt="Vibii App Interface Screenshot">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOUNDER NOTE -->
+    <section class="founder-section">
+      <div class="founder-left rv">
+        <p class="founder-q">
+          "I couldn't find a single place to volunteer in Athens.<br>
+          So I <span class="amber">built one.</span>"
+        </p>
+        <p class="founder-body">
+          In 2024, I wanted to spend a Saturday doing something meaningful. I Googled for two hours and gave up
+          frustrated. <b>The problem wasn't desire — it was infrastructure.</b>
+          <br><br>
+          8,000+ NGOs operate in Greece. Millions of people want to help. But there was no bridge between them. <b>That
+            gap is why Vibii exists.</b>
+        </p>
+        <div class="founder-sig">
+          <div class="sig-av">🐝</div>
+          <div>
+            <div class="sig-name">[Your Name]</div>
+            <div class="sig-role">Co-Founder, Vibii · Athens, Greece</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="founder-right rv d2">
+        <div
+          style="font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;">
+          🐝 Founding Bee Perks</div>
+        <div class="perks-list">
+          <div class="perk">
+            <span class="perk-icon">🏅</span>
+            <div>
+              <div class="perk-title">Founding Member Badge</div>
+              <div class="perk-desc">Permanent badge on your profile. Forever. Nobody can get this after launch.</div>
+            </div>
+          </div>
+          <div class="perk">
+            <span class="perk-icon">🍯</span>
+            <div>
+              <div class="perk-title">Bonus Buzz Points</div>
+              <div class="perk-desc">Extra points credited on your first mission. A head start on the hive.</div>
+            </div>
+          </div>
+          <div class="perk">
+            <span class="perk-icon">⭐</span>
+            <div>
+              <div class="perk-title">Priority Reward Access</div>
+              <div class="perk-desc">First in line for every reward drop. Always. For life.</div>
+            </div>
+          </div>
+          <div class="perk">
+            <span class="perk-icon">🗳️</span>
+            <div>
+              <div class="perk-title">Shape What Launches First</div>
+              <div class="perk-desc">You vote on which missions and cities go live first. Your city. Your call.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM CTA -->
+    <section class="bottom" id="join">
+      <h2 class="bottom-h rv">
+        <span class="o">Don't</span><br>
+        <span class="a">miss it.</span>
+      </h2>
+      <p class="bottom-sub rv">
+        The hive opens 30 June. Founding Bee spots are limited. Takes 10 seconds.
+      </p>
+
+      <div id="fw-b" class="rv d1">
+        <div class="bottom-form">
+          <input class="e-inp hov" type="email" id="em-b" placeholder="your@email.com" autocomplete="email" required
+            style="text-align:center;">
+          <button class="e-btn hov" onclick="sub('b')">Be a Founding Bee 🐝</button>
+        </div>
+      </div>
+      <div class="success" id="ok-b" style="margin:0 auto;justify-content:center;">
+        <span>🐝</span> You're in the hive! See you on launch day.
+      </div>
+      <div id="pr-b" class="proof-row rv d2" style="justify-content:center;margin-top:18px;">
+        <div class="avatars">
+          <div class="av av1">A</div>
+          <div class="av av2">M</div>
+          <div class="av av3">K</div>
+          <div class="av av4">S</div>
+          <div class="av av5">D</div>
+        </div>
+        <span class="proof-text"><b>247</b> people already waiting</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="fl"><img src="vibii_logo.png" alt="Vibii Logo" class="footer-logo"></span>
+    <span class="fc">© 2026 Vibii · Athens, Greece 🇬🇷</span>
+    <a href="https://www.instagram.com/vibii.hive/" target="_blank" rel="noopener noreferrer" class="fi hov"><svg
+        viewBox="0 0 24 24" width="16" height="16" fill="currentColor"
+        style="display:inline-block;vertical-align:middle;">
+        <path
+          d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+      </svg> @vibii.hive</a>
+  </footer>
+
+  <script>
+    // Cursor
+    const cur = document.getElementById('cur');
+    if (window.matchMedia('(pointer: fine)').matches) {
+      let cursorInitialized = false;
+
+      document.addEventListener('mousemove', e => {
+        if (!cursorInitialized) {
+          cur.style.opacity = '1';
+          cursorInitialized = true;
+        }
+        cur.style.left = e.clientX + 'px';
+        cur.style.top = e.clientY + 'px';
+      });
+
+      document.addEventListener('mouseleave', () => {
+        cur.style.opacity = '0';
+      });
+
+      document.addEventListener('mouseenter', () => {
+        if (cursorInitialized) {
+          cur.style.opacity = '1';
+        }
+      });
+
+      document.querySelectorAll('.hov,a,button,input').forEach(el => {
+        el.addEventListener('mouseenter', () => cur.classList.add('big'));
+        el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+      });
+    }
+
+    // Scroll reveal
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+    // Countdown to June 30 2026
+    let timerId;
+    function tick() {
+      const now = new Date();
+      const launch = new Date('2026-06-30T09:00:00+03:00');
+      const diff = launch - now;
+
+      if (diff <= 0) {
+        document.getElementById('cd-d').textContent = '0';
+        document.getElementById('cd-h').textContent = '00';
+        document.getElementById('cd-m').textContent = '00';
+        document.getElementById('cd-s').textContent = '00';
+        if (timerId) clearInterval(timerId);
+        return;
+      }
+
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor((diff % 86400000) / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      const pad = n => String(n).padStart(2, '0');
+
+      document.getElementById('cd-d').textContent = d;
+      document.getElementById('cd-h').textContent = pad(h);
+      document.getElementById('cd-m').textContent = pad(m);
+      document.getElementById('cd-s').textContent = pad(s);
+    }
+    tick();
+    timerId = setInterval(tick, 1000);
+
+    // Counter bump on signup
+    let count = 247;
+    function bumpCount() {
+      count++;
+      document.querySelectorAll('#counter, #pr-b b').forEach(el => {
+        el.textContent = count;
+        el.style.transition = 'color .3s';
+        el.style.color = 'var(--amber)';
+        setTimeout(() => el.style.color = '', 600);
+      });
+    }
+
+    // Focus form
+    // Scroll & Focus form
+    function scrollToSignUp(id) {
+      const el = document.getElementById('em-' + id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => el.focus(), 500);
+      } else {
+        document.getElementById('join').scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    // Submit
+    const subs = new Set();
+    function sub(id) {
+      const el = document.getElementById('em-' + id);
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!el || !emailRegex.test(el.value)) {
+        el.focus();
+        el.style.borderColor = '#E24B4A';
+        return;
+      }
+      if (subs.has(el.value)) { alert('You\'re already on the list! 🐝'); return; }
+      subs.add(el.value);
+
+      // Reset border color on success
+      el.style.borderColor = '';
+
+      // Send to Loops
+      const formBody = "userGroup=&mailingLists=&email=" + encodeURIComponent(el.value);
+
+      fetch('https://app.loops.so/api/newsletter-form/cmpodnefq0b8m0j3ngvr0zvz2', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formBody
+      })
+      .then(response => {
+        if (!response.ok) {
+          console.error('Failed to submit to Loops:', response.statusText);
+        }
+      })
+      .catch(err => {
+        console.error('Error submitting email:', err);
+      });
+
+      // Animate UI instantly for instant feedback
+      document.getElementById('fw-' + id).style.display = 'none';
+      document.getElementById('ok-' + id).classList.add('on');
+      document.getElementById('pr-' + id) && (document.getElementById('pr-' + id).style.display = 'none');
+      bumpCount();
+    }
+
+    // Enter key on inputs
+    document.querySelectorAll('.e-inp').forEach(inp => {
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); sub(inp.id.replace('em-', '')); } });
+    });
+  </script>
+</body>
+
+</html>
