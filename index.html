@@ -145,6 +145,30 @@
       gap: 6px;
     }
 
+    .nav-sep {
+      width: 1px;
+      height: 14px;
+      background: rgba(26, 18, 8, 0.15);
+      margin: 0 4px;
+    }
+
+    .nav-ig {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(26, 18, 8, 0.55);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .nav-ig:hover {
+      color: var(--amber-d);
+    }
+
     .nr-dot {
       width: 6px;
       height: 6px;
@@ -189,6 +213,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
       padding: 100px 48px 80px;
       position: relative;
       overflow: hidden;
@@ -208,26 +233,16 @@
       pointer-events: none;
     }
 
-    /* Ghost word */
-    .hero-ghost {
-      position: absolute;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(180px, 28vw, 400px);
-      color: rgba(245, 166, 35, .03);
-      line-height: 1;
-      right: -60px;
-      top: 50%;
-      transform: translateY(-50%);
-      letter-spacing: -8px;
-      pointer-events: none;
-      user-select: none;
-      white-space: nowrap;
-    }
+
 
     .hero-inner {
       position: relative;
       z-index: 2;
       max-width: 1100px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     /* Eyebrow */
@@ -256,6 +271,8 @@
       color: rgba(255, 255, 255, .32);
       line-height: 1.35;
       margin-bottom: 24px;
+      margin-left: auto;
+      margin-right: auto;
       max-width: 720px;
       opacity: 0;
       animation: up .7s ease .15s forwards;
@@ -289,6 +306,8 @@
       line-height: 1.7;
       max-width: 520px;
       margin-bottom: 48px;
+      margin-left: auto;
+      margin-right: auto;
       opacity: 0;
       animation: up .7s ease .42s forwards;
     }
@@ -309,6 +328,9 @@
       gap: 10px;
       max-width: 520px;
       margin-bottom: 14px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
     }
 
     .e-inp {
@@ -362,6 +384,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
+      justify-content: center;
       opacity: 0;
       animation: up .6s ease .7s forwards;
     }
@@ -449,6 +472,8 @@
       display: flex;
       align-items: center;
       gap: 40px;
+      justify-content: center;
+      width: 100%;
       opacity: 0;
       animation: up .7s ease .85s forwards;
     }
@@ -459,12 +484,14 @@
       letter-spacing: .14em;
       text-transform: uppercase;
       color: var(--muted);
+      text-align: center;
     }
 
     .cdown-nums {
       display: flex;
       align-items: center;
       gap: 6px;
+      justify-content: center;
     }
 
     .cd-block {
@@ -1013,6 +1040,42 @@
 
       .hero {
         padding: 88px 24px 60px;
+        align-items: center;
+      }
+
+      .hero-inner {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-problem,
+      .hero-sub {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .email-row {
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .proof-row {
+        justify-content: center;
+      }
+
+      .countdown-wrap {
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .cdown-nums {
+        justify-content: center;
       }
 
       .ps-grid,
@@ -1029,6 +1092,7 @@
         flex-wrap: wrap;
         gap: 24px;
         padding: 24px;
+        justify-content: center;
       }
 
       .strip-div {
@@ -1042,19 +1106,19 @@
         padding: 80px 24px;
       }
 
-      .email-row,
       .bottom-form {
         flex-direction: column;
       }
 
-      .countdown-wrap {
-        flex-wrap: wrap;
+      footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
         gap: 20px;
       }
 
-      footer {
-        flex-direction: column;
-        text-align: center;
+      .ig-text {
+        display: none;
       }
     }
   </style>
@@ -1069,6 +1133,13 @@
     <a href="#" class="nl"><img src="vibii_logo.png" alt="Vibii Logo" class="nav-logo"></a>
     <div class="nr">
       <span class="nr-date"><span class="nr-dot"></span>Launching 30 June 2026</span>
+      <span class="nav-sep"></span>
+      <a href="https://www.instagram.com/vibii.hive/" target="_blank" rel="noopener noreferrer" class="fi hov nav-ig">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+        </svg>
+        <span class="ig-text">Instagram</span>
+      </a>
     </div>
   </nav>
 
@@ -1076,7 +1147,6 @@
 
     <!-- HERO -->
     <section class="hero">
-      <div class="hero-ghost" aria-hidden="true">HIVE</div>
       <div class="hero-inner">
 
         <div class="hero-eye">
@@ -1251,7 +1321,7 @@
         <div class="founder-sig">
           <div class="sig-av">🐝</div>
           <div>
-            <div class="sig-name">[Your Name]</div>
+            <div class="sig-name">Euaggelos Karamitros</div>
             <div class="sig-role">Co-Founder, Vibii · Athens, Greece</div>
           </div>
         </div>
@@ -1407,17 +1477,7 @@
     tick();
     timerId = setInterval(tick, 1000);
 
-    // Counter bump on signup
-    let count = 247;
-    function bumpCount() {
-      count++;
-      document.querySelectorAll('#counter, #pr-b b').forEach(el => {
-        el.textContent = count;
-        el.style.transition = 'color .3s';
-        el.style.color = 'var(--amber)';
-        setTimeout(() => el.style.color = '', 600);
-      });
-    }
+
 
     // Focus form
     // Scroll & Focus form
@@ -1457,20 +1517,19 @@
         },
         body: formBody
       })
-      .then(response => {
-        if (!response.ok) {
-          console.error('Failed to submit to Loops:', response.statusText);
-        }
-      })
-      .catch(err => {
-        console.error('Error submitting email:', err);
-      });
+        .then(response => {
+          if (!response.ok) {
+            console.error('Failed to submit to Loops:', response.statusText);
+          }
+        })
+        .catch(err => {
+          console.error('Error submitting email:', err);
+        });
 
       // Animate UI instantly for instant feedback
       document.getElementById('fw-' + id).style.display = 'none';
       document.getElementById('ok-' + id).classList.add('on');
       document.getElementById('pr-' + id) && (document.getElementById('pr-' + id).style.display = 'none');
-      bumpCount();
     }
 
     // Enter key on inputs
